@@ -4,13 +4,11 @@ import numpy as np
 from PIL import Image
 
 
-# ───────────────── CONFIGURACIÓN DE LA PÁGINA ─────────────────
 st.set_page_config(
     page_title="Clasificador de Objetos",
     layout="centered",
 )
 
-# ───────────────── ESTILOS PERSONALIZADOS (CSS) ─────────────────
 st.markdown(
     """
     <style>
@@ -86,15 +84,13 @@ model = tf.keras.models.load_model("modelo_objetos_tf.h5", compile=False)
 class_names = ["calculadora", "cartuchera", "engrapadora"]
 img_size = (224, 224)
 
-
 def preparar_imagen(uploaded_image):
     img = Image.open(uploaded_image).convert("RGB")
     img = img.resize(img_size)
 
-    arr = np.array(img) / 255.0 # normalización
-    arr = np.expand_dims(arr, 0)
+    arr = np.array(img).astype("float32") 
+    arr = np.expand_dims(arr, 0)       
     return arr, img
-
 
 # interfaz para el estilo 
 st.markdown('<div class="main-title">Clasificador de Objetos</div>', unsafe_allow_html=True)
@@ -107,7 +103,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Sidebar con info
 with st.sidebar:
     st.header("Información")
     st.write(
@@ -122,17 +117,12 @@ with st.sidebar:
     st.write("Cargue una imagen para visualizar su clase y confianza de predicción.")
     st.caption("Desarrollado como proyecto de la materia Inteligencia Artificial")
 
-# Cargador de imagen
 uploaded_file = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    # Preprocesar imagen
     x, img_display = preparar_imagen(uploaded_file)
-
-    # Mostrar imagen
     st.image(img_display, caption="Imagen subida", width=320)
 
-    # Predicción
     pred = model.predict(x)[0]
     idx = int(np.argmax(pred))
     confianza = float(pred[idx] * 100)
