@@ -1,4 +1,4 @@
-# Clasificador de Objetos con IA
+# Clasificador de Objetos
 
 Proyecto de **Inteligencia Artificial** para clasificar imágenes de objetos de escritorio usando **Deep Learning** y **MobileNetV2**.
 
